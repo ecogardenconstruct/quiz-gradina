@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ce tip de grădină ți se potrivește? | Eco Garden Construct</title>
+<meta name="description" content="Quiz interactiv: descoperă în 2 minute ce tip de grădină ți se potrivește în funcție de stilul tău de viață, casă și preferințe.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f3ee; color: #2c2c2a; line-height: 1.6; min-height: 100vh; }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 40px 20px; }
+  .card { background: #ffffff; border-radius: 16px; padding: 40px 32px; border: 1px solid rgba(0,0,0,0.06); }
+  .brand { font-size: 12px; color: #5f5e5a; letter-spacing: 1.2px; text-align: center; margin-bottom: 12px; font-weight: 500; }
+  h1 { font-size: 26px; font-weight: 500; margin-bottom: 14px; line-height: 1.3; text-align: center; }
+  h2 { font-size: 20px; font-weight: 500; margin-bottom: 24px; line-height: 1.4; }
+  .lead { font-size: 16px; color: #5f5e5a; text-align: center; margin-bottom: 32px; }
+  .btn-primary { background: #2c2c2a; color: white; border: none; padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; transition: opacity 0.2s; font-family: inherit; }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-secondary { background: transparent; border: 1px solid #d3d1c7; padding: 12px 22px; border-radius: 8px; font-size: 14px; cursor: pointer; font-family: inherit; color: #2c2c2a; }
+  .btn-secondary:hover { background: #f5f3ee; }
+  .center { text-align: center; }
+  .progress-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-size: 13px; color: #5f5e5a; }
+  .progress-bar-bg { background: #f1efe8; height: 5px; border-radius: 3px; margin-bottom: 28px; overflow: hidden; }
+  .progress-bar { background: #639922; height: 100%; transition: width 0.4s ease; border-radius: 3px; }
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .option { text-align: left; padding: 16px 18px; background: white; border: 1px solid #e8e6df; border-radius: 10px; font-size: 15px; cursor: pointer; line-height: 1.5; color: #2c2c2a; transition: all 0.15s; font-family: inherit; }
+  .option:hover { border-color: #639922; background: #f9faf5; }
+  .footer-row { display: flex; justify-content: space-between; align-items: center; }
+  .back-btn { background: transparent; border: none; color: #5f5e5a; font-size: 14px; cursor: pointer; padding: 8px 0; font-family: inherit; }
+  .back-btn:hover { color: #2c2c2a; }
+  .hint { font-size: 13px; color: #888780; }
+  .result-section { background: #f9faf5; border-radius: 12px; padding: 22px 24px; margin-bottom: 16px; border-left: 3px solid #639922; }
+  .result-section h3 { font-size: 13px; color: #5f5e5a; margin-bottom: 14px; font-weight: 500; letter-spacing: 0.8px; }
+  .result-section ul { margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.9; }
+  .result-section ul li { margin-bottom: 4px; }
+  .result-title { font-size: 28px; font-weight: 500; margin-bottom: 14px; color: #173404; }
+  .result-desc { font-size: 16px; color: #444441; line-height: 1.7; margin-bottom: 28px; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+  .badge { display: inline-block; background: #eaf3de; color: #3b6d11; padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; letter-spacing: 0.5px; margin-bottom: 12px; }
+  .footer { text-align: center; margin-top: 24px; font-size: 12px; color: #888780; }
+  .footer a { color: #639922; text-decoration: none; }
+  @media (max-width: 600px) {
+    .card { padding: 28px 22px; border-radius: 12px; }
+    h1 { font-size: 22px; }
+    .wrap { padding: 20px 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+
+    <div id="intro">
+      <div class="brand">ECO GARDEN CONSTRUCT</div>
+      <h1>Ce tip de grădină ți se potrivește?</h1>
+      <p class="lead">Cu doar 5 întrebări afli ce tip de grădină ți se potrivește. La final primești profilul tău și recomandări concrete pentru plante și amenajare.</p>
+      <div class="center">
+        <button class="btn-primary" onclick="startQuiz()">Începe quiz-ul</button>
+      </div>
+    </div>
+
+    <div id="quiz" style="display:none;">
+      <div class="progress-row">
+        <span id="step-label">Întrebarea 1 din 5</span>
+        <span id="step-counter">20%</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar" id="progress-bar" style="width:20%"></div>
+      </div>
+      <h2 id="question"></h2>
+      <div class="options" id="options"></div>
+      <div class="footer-row">
+        <button class="back-btn" id="back-btn" onclick="prevQuestion()">← Înapoi</button>
+        <span class="hint">Alege o variantă pentru a continua</span>
+      </div>
+    </div>
+
+    <div id="result" style="display:none;">
+      <div class="badge">REZULTATUL TĂU</div>
+      <h1 id="result-title" class="result-title"></h1>
+      <p id="result-desc" class="result-desc"></p>
+
+      <div class="result-section">
+        <h3>PLANTE RECOMANDATE</h3>
+        <ul id="result-plants"></ul>
+      </div>
+
+      <div class="result-section">
+        <h3>CARACTERISTICI CHEIE</h3>
+        <ul id="result-features"></ul>
+      </div>
+
+      <div class="actions">
+        <button class="btn-secondary" onclick="restart()">Reia quiz-ul</button>
+        <a href="mailto:office@ecogardenconstruct.com?subject=Consulta%C8%9Bie%20gratuit%C4%83%20gr%C4%83din%C4%83&body=Bun%C4%83%2C%20am%20completat%20quiz-ul%20%C8%99i%20a%C8%99%20dori%20o%20consulta%C8%9Bie%20gratuit%C4%83%20pentru%20gr%C4%83dina%20mea." style="text-decoration:none;">
+          <button class="btn-primary">Vreau o consultație gratuită</button>
+        </a>
+      </div>
+    </div>
+
+  </div>
+  <p class="footer">Realizat de <a href="#">Eco Garden Construct</a> · Amenajări peisagistice</p>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "Cât timp ești dispus să dedici grădinii săptămânal?",
+    options: [
+      { text: "Minim. Vreau să se descurce singură", scores: { mediteranean: 3, natural: 2, modern: 1, englez: 0 } },
+      { text: "30 de minute - 1 oră", scores: { modern: 3, mediteranean: 2, natural: 2, englez: 1 } },
+      { text: "Câteva ore - îmi place să grădinăresc", scores: { englez: 3, natural: 2, modern: 1, mediteranean: 1 } },
+      { text: "Cât e nevoie - e pasiunea mea", scores: { englez: 3, natural: 3, modern: 1, mediteranean: 1 } }
+    ]
+  },
+  {
+    q: "Cum descrii stilul casei tale?",
+    options: [
+      { text: "Modernă, linii simple, minimalistă", scores: { modern: 3, mediteranean: 1, natural: 1, englez: 0 } },
+      { text: "Tradițională sau clasică", scores: { englez: 3, natural: 2, mediteranean: 1, modern: 0 } },
+      { text: "Rustică, casă de țară", scores: { natural: 3, englez: 2, mediteranean: 1, modern: 0 } },
+      { text: "Mediteraneană sau provensală", scores: { mediteranean: 3, englez: 1, natural: 1, modern: 1 } }
+    ]
+  },
+  {
+    q: "Ce vrei să faci cel mai des în grădină?",
+    options: [
+      { text: "Să iau masa în aer liber, să primesc oaspeți", scores: { modern: 3, mediteranean: 3, englez: 1, natural: 1 } },
+      { text: "Să mă relaxez, să citesc, să fiu în liniște", scores: { englez: 3, natural: 3, mediteranean: 2, modern: 1 } },
+      { text: "Să mă joc cu copiii sau animalele", scores: { natural: 3, modern: 2, englez: 2, mediteranean: 1 } },
+      { text: "Să cultiv ceva - flori, legume, ierburi", scores: { englez: 3, natural: 3, mediteranean: 2, modern: 0 } }
+    ]
+  },
+  {
+    q: "Ce zonă din țară este grădina ta?",
+    options: [
+      { text: "Sud sau zonă caldă și uscată", scores: { mediteranean: 3, modern: 2, natural: 1, englez: 0 } },
+      { text: "Zonă de deal sau pădure", scores: { natural: 3, englez: 2, modern: 1, mediteranean: 1 } },
+      { text: "Oraș sau zonă urbană", scores: { modern: 3, mediteranean: 2, englez: 1, natural: 1 } },
+      { text: "Câmpie sau zonă cu ierni reci", scores: { englez: 2, natural: 3, modern: 2, mediteranean: 0 } }
+    ]
+  },
+  {
+    q: "Ce te atrage cel mai mult vizual?",
+    options: [
+      { text: "Linii curate, simetrie, ordine", scores: { modern: 3, mediteranean: 1, englez: 1, natural: 0 } },
+      { text: "Flori multe, culori, abundență", scores: { englez: 3, natural: 2, mediteranean: 2, modern: 0 } },
+      { text: "Verde natural, sălbăticie controlată", scores: { natural: 3, englez: 2, mediteranean: 1, modern: 0 } },
+      { text: "Texturi, plante aromatice, piatră", scores: { mediteranean: 3, natural: 2, modern: 1, englez: 1 } }
+    ]
+  }
+];
+
+const profiles = {
+  modern: {
+    title: "Grădina modernă minimalistă",
+    desc: "Îți place ordinea, spațiul curat și linia clară. Grădina ta funcționează ca o extensie a casei — un spațiu de relaxare ușor de întreținut, cu accente verzi puternice și puține flori.",
+    plants: ["Graminee ornamentale (Miscanthus, Pennisetum)", "Bambus în formă controlată", "Buxus tuns geometric", "Lavandă în masive uniforme", "Acer palmatum ca punct focal"],
+    features: ["Întreținere medie - tăieri sezoniere", "Pavaj geometric, beton aparent sau lemn", "Iluminat arhitectural", "Apă în formă liniară (oglindă, jgheab)"]
+  },
+  mediteranean: {
+    title: "Grădina mediteraneană",
+    desc: "Cauți o grădină care suportă seceta, miroase frumos și se simte ca o vacanță. Plantele tale rezistă la căldură, au texturi argintii și parfum.",
+    plants: ["Lavandă, rozmarin, salvie", "Măslin (Olea europaea)", "Chiparos columnar", "Oleandru și agave", "Trandafiri urcători rezistenți"],
+    features: ["Întreținere scăzută - rezistă la secetă", "Pavaj din piatră naturală sau teracotă", "Pergole cu plante cățărătoare", "Sistem de irigație picătură cu picătură"]
+  },
+  englez: {
+    title: "Grădina englezească",
+    desc: "Iubești florile, abundența și senzația că grădina trăiește. Ești dispusă să investești timp pentru a obține un spațiu romantic, plin de culoare în fiecare sezon.",
+    plants: ["Trandafiri urcători și de tufă", "Hortensii (paniculata, macrophylla)", "Lavandă, peonia, delphinium", "Glicină pe pergolă", "Boarduri mixte cu vivace"],
+    features: ["Întreținere ridicată - tăieri, fertilizări", "Aleile din piatră naturală sau pietriș", "Garduri vii din carpen sau tisă", "Necesită soluri îmbunătățite și mulci"]
+  },
+  natural: {
+    title: "Grădina naturală cu specii native",
+    desc: "Vrei o grădină care arată ca o continuare a peisajului din jur. Atragi fluturi și păsări, alegi specii rezistente și lași natura să facă o parte din muncă.",
+    plants: ["Specii native (corn, soc, alun)", "Iarbă ornamentală spontană", "Echinacea, rudbeckia, achillea", "Mesteacăn, salcie, arțar de câmp", "Plante melifere pentru polenizatori"],
+    features: ["Întreținere scăzută după primii 2 ani", "Trasee din lemn sau piatră brută", "Compostare proprie", "Zone diferențiate (umbră, soare, umed)"]
+  }
+};
+
+let currentStep = 0;
+let scores = { modern: 0, mediteranean: 0, englez: 0, natural: 0 };
+let answers = [];
+
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentStep];
+  document.getElementById('question').textContent = q.q;
+  document.getElementById('step-label').textContent = 'Întrebarea ' + (currentStep + 1) + ' din ' + questions.length;
+  const pct = Math.round(((currentStep + 1) / questions.length) * 100);
+  document.getElementById('step-counter').textContent = pct + '%';
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('back-btn').style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+
+  const optionsEl = document.getElementById('options');
+  optionsEl.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.textContent = opt.text;
+    btn.className = 'option';
+    btn.onclick = () => selectOption(i);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectOption(i) {
+  const q = questions[currentStep];
+  const opt = q.options[i];
+
+  if (answers[currentStep] !== undefined) {
+    const prevOpt = q.options[answers[currentStep]];
+    Object.keys(prevOpt.scores).forEach(k => scores[k] -= prevOpt.scores[k]);
+  }
+
+  Object.keys(opt.scores).forEach(k => scores[k] += opt.scores[k]);
+  answers[currentStep] = i;
+
+  if (currentStep < questions.length - 1) {
+    currentStep++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function prevQuestion() {
+  if (currentStep > 0) {
+    currentStep--;
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('result').style.display = 'block';
+  const winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+  const profile = profiles[winner];
+  document.getElementById('result-title').textContent = profile.title;
+  document.getElementById('result-desc').textContent = profile.desc;
+  const plantsEl = document.getElementById('result-plants');
+  plantsEl.innerHTML = '';
+  profile.plants.forEach(p => {
+    const li = document.createElement('li');
+    li.textContent = p;
+    plantsEl.appendChild(li);
+  });
+  const featuresEl = document.getElementById('result-features');
+  featuresEl.innerHTML = '';
+  profile.features.forEach(f => {
+    const li = document.createElement('li');
+    li.textContent = f;
+    featuresEl.appendChild(li);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restart() {
+  currentStep = 0;
+  scores = { modern: 0, mediteranean: 0, englez: 0, natural: 0 };
+  answers = [];
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('intro').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
